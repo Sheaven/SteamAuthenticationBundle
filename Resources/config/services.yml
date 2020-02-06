@@ -1,0 +1,60 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: true
+        public: false
+
+    Soljian\SteamAuthenticationBundle\Security\Authentication\Provider\SteamProvider: '@soljian.steam_authentication.security.authentication.provider.steam_provider'
+    Soljian\SteamAuthenticationBundle\Security\Firewall\SteamListener: '@soljian.steam_authentication.security.firewall.steam_listener'
+    Soljian\SteamAuthenticationBundle\Security\User\SteamUserProvider: '@soljian.steam_authentication.security.user.steam_user_provider'
+
+    soljian.steam_authentication.factory.user_factory:
+        class: Soljian\SteamAuthenticationBundle\Factory\UserFactory
+        arguments:
+            - '%soljian.steam_authentication.user_class%'
+
+    soljian.steam_authentication.http.steam_api_client:
+        class: Soljian\SteamAuthenticationBundle\Http\SteamApiClient
+        arguments:
+            - '%soljian.steam_authentication.api_key%'
+        public: true
+
+    soljian.steam_authentication.security.authentication.provider.steam_provider:
+        class: Soljian\SteamAuthenticationBundle\Security\Authentication\Provider\SteamProvider
+        arguments:
+            - ''
+
+    soljian.steam_authentication.security.firewall.steam_listener:
+        class: Soljian\SteamAuthenticationBundle\Security\Firewall\SteamListener
+        arguments:
+            - '@security.authentication.manager'
+            - '@router'
+            - '%soljian.steam_authentication.login_redirect%'
+            - '@security.token_storage'
+            - '@soljian.steam_authentication.request_validator'
+
+    soljian.steam_authentication.security.user.steam_user_provider:
+        class: Soljian\SteamAuthenticationBundle\Security\User\SteamUserProvider
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@soljian.steam_authentication.http.steam_api_client'
+            - '%soljian.steam_authentication.user_class%'
+            - '@soljian.steam_authentication.factory.user_factory'
+
+    soljian.steam_authentication.twig.steam_extension:
+        class: Soljian\SteamAuthenticationBundle\Twig\SteamExtension
+        arguments:
+            - '@router'
+            - '%soljian.steam_authentication.login_route%'
+        tags:
+            - { name: twig.extension }
+
+    soljian.steam_authentication.openid_validator:
+        class: Soljian\SteamAuthenticationBundle\OpenId\PayloadValidator
+
+    soljian.steam_authentication.request_validator:
+        class: '%soljian.steam_authentication.request_validator_class%'
+        arguments:
+            $router: '@router'
+            $loginRoute: '%soljian.steam_authentication.login_route%'
+            $payloadValidator: '@soljian.steam_authentication.openid_validator'
