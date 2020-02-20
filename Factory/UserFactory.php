@@ -39,7 +39,7 @@ class UserFactory
 
         $user->setSteamId($userData['steamid']);
         $user->setCommunityVisibilityState($userData['communityvisibilitystate']);
-        $user->setProfileState($userData['profilestate']);
+        $user->setProfileState(isset($userData['profilestate']) ? $userData['profilestate'] : 0);
         $user->setProfileName($userData['personaname']);
         $user->setLastLogOff(
             isset($userData['lastlogoff']) ? $userData['lastlogoff'] : 0
@@ -49,7 +49,7 @@ class UserFactory
         );
         $user->setProfileUrl($userData['profileurl']);
         $user->setAvatar($userData['avatarfull']);
-        $user->setPersonaState($userData['personastate']);
+        $user->setPersonaState(isset($userData['personastate']) ? $userData['personastate'] : 0);
         $user->setPrimaryClanId(
             isset($userData['primaryclanid']) ? $userData['primaryclanid'] : null
         );

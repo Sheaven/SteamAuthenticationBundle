@@ -352,7 +352,7 @@ abstract class AbstractSteamUser implements SteamUserInterface, UserInterface
     public function update(array $userData)
     {
         $this->setCommunityVisibilityState($userData['communityvisibilitystate']);
-        $this->setProfileState($userData['profilestate']);
+        $this->setProfileState(isset($userData['profilestate']) ? $userData['profilestate'] : 0);
         $this->setProfileName($userData['personaname']);
         $this->setLastLogOff(
             isset($userData['lastlogoff']) ? $userData['lastlogoff'] : 0
@@ -362,7 +362,7 @@ abstract class AbstractSteamUser implements SteamUserInterface, UserInterface
         );
         $this->setProfileUrl($userData['profileurl']);
         $this->setAvatar($userData['avatarfull']);
-        $this->setPersonaState($userData['personastate']);
+        $this->setPersonaState(isset($userData['personastate']) ? $userData['personastate'] : 0);
         $this->setPrimaryClanId(
             isset($userData['primaryclanid']) ? $userData['primaryclanid'] : null
         );
